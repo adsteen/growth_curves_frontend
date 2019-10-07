@@ -19,7 +19,8 @@ shinyUI(pageWithSidebar(
     
   ),
   mainPanel(
-    tableOutput("filetable"),
-    tableOutput("geotable")
+    #tableOutput("filetable"),
+    plotOutput("lmPlot")
+    #tableOutput("geotable")
   )
 ))

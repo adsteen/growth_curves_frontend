@@ -1,13 +1,19 @@
 shinyServer(function(input, output) {
   
   #This function is repsonsible for loading in the selected file
-  filedata <- reactive({
+  my_plot <- reactive({
     infile <- input$datafile
     if (is.null(infile)) {
       # User has not uploaded a file yet
       return(NULL)
     }
-    read.csv(infile$datapath, stringsAsFactors = FALSE) # the file load creates an object with a $datapath
+    d <- read.csv(infile$datapath, stringsAsFactors = FALSE) # the file load creates an object with a $datapath
+    v1 <- d[ , 1]
+    v2 <- d[ , 2]
+    df <- data.frame(x = v1, y = v2)
+    p <- ggplot(df, aes(x=x, y=y)) + 
+      geom_point() + 
+      geom_smooth(method = "lm")
   })
   
  
@@ -52,8 +58,12 @@ shinyServer(function(input, output) {
   # })
   
   #This previews the CSV data file
-  output$filetable <- renderTable({
-    filedata()
+  # output$filetable <- renderTable({
+  #   filedata()
+  # })
+  
+  output$lmPlot <- renderPlot({
+    print(my_plot())
   })
   
   # #This function is the one that is triggered when the action button is pressed
