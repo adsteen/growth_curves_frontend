@@ -1,2 +1,2 @@
-library(ggmap)
+# library(ggmap)
 library(shiny)

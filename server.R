@@ -1,20 +1,64 @@
 shinyServer(function(input, output) {
   
-  #This function is repsonsible for loading in the selected file
-  my_plot <- reactive({
+  # reads in the selected file
+  open_file <- reactive({ 
     infile <- input$datafile
     if (is.null(infile)) {
       # User has not uploaded a file yet
       return(NULL)
     }
+    
+    # read the file; note that infile is a data path object, not a string
     d <- read.csv(infile$datapath, stringsAsFactors = FALSE) # the file load creates an object with a $datapath
-    v1 <- d[ , 1]
-    v2 <- d[ , 2]
-    df <- data.frame(x = v1, y = v2)
-    p <- ggplot(df, aes(x=x, y=y)) + 
-      geom_point() + 
-      geom_smooth(method = "lm")
+    d
   })
+  
+  create_lm <- reactive({
+    
+    if (is.null(infile)) {
+      # User has not uploaded a file yet
+      return(NULL)
+    }
+    d <- open_file()
+    
+    # It's a little silly to pull out the two vectors and put them back together into a new dataframe
+    # (would definitely be more straightforwara to select())
+    x <- d[ , 1]
+    y <- d[ , 2]
+    df <- data.frame(x = v1, y = v2)
+    
+    my_lm <- lm(y ~ x, data = df)
+    my_lm
+  })
+  
+  get_summary <- reactive({
+    if(is.null(create_lm())) {
+      return(NULL)
+    }
+    
+    lm_summ <- summary(create_lm())
+    lm_summ
+  })
+  
+  make_plot <- reactive({
+    if(is.null(open_file())) {
+      return(NULL)
+    }
+    
+    p <- ggplot(data = open_file(), aes(x = x, y = y)) + 
+      geom_point() #+ 
+      #geom_smooth(method = "lm")
+  })
+  
+  add_linear_fit <- reactive({
+    actionButton$go
+    
+    p <- p + 
+      geom_smooth(method = "lm")
+    p
+  })
+  
+  output$inputTable <- renderTable(head(open_file()))
   
  
   #The following set of functions populate the column selectors
@@ -63,7 +107,7 @@ shinyServer(function(input, output) {
   # })
   
   output$lmPlot <- renderPlot({
-    print(my_plot())
+    print(make_plot())
   })
   
   # #This function is the one that is triggered when the action button is pressed

@@ -4,7 +4,14 @@ shinyUI(pageWithSidebar(
   sidebarPanel(
     #Selector for file upload
     fileInput('datafile', 'Choose CSV file',
-              accept=c('text/csv', 'text/comma-separated-values,text/plain'))#,
+              accept=c('text/csv', 'text/comma-separated-values,text/plain')),
+    radioButtons("fitType", "Functional Form",
+                 c("none" = "none",
+                   "linear" = "linear",
+                   "quadratic" = "quadratic"),
+                 selected = "none"),
+    actionButton("go", "Calc fits")
+    
     # #These column selectors are dynamically created when the file is loaded
     # uiOutput("fromCol"),
     # uiOutput("toCol"),
@@ -20,7 +27,8 @@ shinyUI(pageWithSidebar(
   ),
   mainPanel(
     #tableOutput("filetable"),
-    plotOutput("lmPlot")
+    plotOutput("lmPlot"),
+    tableOutput('inputTable')
     #tableOutput("geotable")
   )
 ))
