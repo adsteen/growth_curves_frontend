@@ -9,7 +9,7 @@ shinyServer(function(input, output) {
     }
     
     # read the file; note that infile is a data path object, not a string
-    d <- read.csv(infile$datapath, stringsAsFactors = FALSE) # the file load creates an object with a $datapath
+    d <- read.csv(infile$datapath, stringsAsFactors = FALSE) # fileInput() creates an object with a $datapath
     d
   })
   
@@ -48,15 +48,16 @@ shinyServer(function(input, output) {
     p <- ggplot(data = open_file(), aes(x = x, y = y)) + 
       geom_point() #+ 
       #geom_smooth(method = "lm")
-  })
-  
-  add_linear_fit <- reactive({
-    actionButton$go
-    
-    p <- p + 
-      geom_smooth(method = "lm")
     p
   })
+  
+  # add_linear_fit <- reactive({
+  #   actionButton$go
+  #   
+  #   p <- p + 
+  #     geom_smooth(method = "lm")
+  #   p
+  # })
   
   output$inputTable <- renderTable(head(open_file()))
   

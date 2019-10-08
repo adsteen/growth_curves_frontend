@@ -1,5 +1,5 @@
 shinyUI(pageWithSidebar(
-  headerPanel("CSV File Upload Demo"),
+  headerPanel("CSV File Upload And Model Fitting Demo"),
   
   sidebarPanel(
     #Selector for file upload
